@@ -67,5 +67,61 @@
     "use strict";
     // Код писать здесь
     console.log("It works!");
+    const addCommentButton = document.querySelector(".add-form-button");
+    const inputName = document.querySelector(".add-form-name");
+    const inputText = document.querySelector(".add-form-text");
+    const blockComments = document.querySelector(".comments");
+    const dateTimeOptions = {
+      year: '2-digit',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false
+    };
+
+
+    function clearErrors() {
+      inputName.classList.remove('error-input');
+      inputText.classList.remove('error-input');
+    }
+
+    inputName.addEventListener('focus', clearErrors);
+    inputText.addEventListener('focus', clearErrors);
+
+    addCommentButton.addEventListener("click", () => {
+      const name = inputName.value.trim();
+      const text = inputText.value.trim();
+
+      if (!name) inputName.classList.add("error-input");
+      if (!text) inputText.classList.add("error-input");
+
+      if (!name || !text) return;
+
+      const now = new Date();
+      const dateTimeFormated = now.toLocaleString('ru-RU', dateTimeOptions).replace(",", "");
+      const newComment = document.createElement("li");
+      newComment.classList.add("comment");
+      newComment.innerHTML = `
+          <div class="comment-header">
+            <div>${name}</div>
+            <div>${dateTimeFormated}</div>
+          </div>
+          <div class="comment-body">
+            <div class="comment-text">
+              ${text}
+            </div>
+          </div>
+          <div class="comment-footer">
+            <div class="likes">
+              <span class="likes-counter">0</span>
+              <button class="like-button"></button>
+            </div>
+          </div>
+      `
+      blockComments.append(newComment);
+      inputName.value = "";
+      inputText.value = "";
+    })
   </script>
 </html>
