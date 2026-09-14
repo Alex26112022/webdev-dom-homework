@@ -60,6 +60,9 @@
     const textInput = document.querySelector('.add-form-text');
     const addButton = document.querySelector('.add-form-button');
 
+    let reply = false;
+    let replyId = null;
+
     const dateOptions = {
       year: '2-digit',
       month: '2-digit',
@@ -75,13 +78,14 @@
       comments.forEach(comment => {
         const li = document.createElement('li');
         li.className = 'comment';
+        li.dataset.id = comment.id;
         li.innerHTML = `
           <div class="comment-header">
-            <div>${comment.name}</div>
+            <div>${sanitize(comment.name)}</div>
             <div>${comment.date}</div>
           </div>
           <div class="comment-body">
-            <div class="comment-text">${comment.text}</div>
+            <div class="comment-text">${sanitize(comment.text).replace(/\n/g, '<br><br>')}</div>
           </div>
           <div class="comment-footer">
             <div class="likes">
@@ -96,9 +100,14 @@
       document.querySelectorAll('.like-button').forEach(button => {
         button.addEventListener('click', onLikeClick);
       });
+
+      document.querySelectorAll('.comment').forEach(button => {
+        button.addEventListener('click', onCommentClick);
+      });
     }
 
     function onLikeClick(event) {
+      event.stopPropagation();
       const id = Number(event.currentTarget.dataset.id);
 
       const comment = comments.find(c => c.id === id);
@@ -117,7 +126,18 @@
 
     addButton.addEventListener('click', () => {
       clearErrors();
+      if (!reply) {
+        addComment();
+      } else {
+        editComment();
+        reply = false;
+      }
 
+
+      render();
+    });
+
+    function addComment() {
       const name = nameInput.value.trim();
       const text = textInput.value.trim();
 
@@ -139,12 +159,46 @@
 
       nameInput.value = '';
       textInput.value = '';
+    }
 
-      render();
-    });
+    function editComment() {
+      addButton.textContent = 'Написать';
+
+      comments.forEach(comment => {
+        if (comment.id === replyId) {
+          comment.text = textInput.value.trim();
+        }
+      });
+
+      replyId = null;
+      nameInput.value = '';
+      textInput.value = '';
+    }
 
     nameInput.addEventListener('focus', clearErrors);
     textInput.addEventListener('focus', clearErrors);
+
+    function onCommentClick(event) {
+      addButton.textContent = 'Ответить';
+      const author = event.currentTarget.querySelector('.comment-header div:first-child').textContent;
+      const message = event.currentTarget.querySelector('.comment-text').textContent;
+      replyId = Number(event.currentTarget.dataset.id);
+
+      nameInput.value = author;
+      textInput.value = message + '\n> ';
+
+      reply = true;
+
+      render();
+    }
+
+    function sanitize(str) {
+      return str
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;');
+    }
 
     render();
 
