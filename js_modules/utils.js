@@ -54,15 +54,14 @@ function editComment() {
   data_comments.textInput.value = '';
 }
 
-function onCommentClick(event) {
+function onCommentClick(commentEl) {
   data_comments.addButton.textContent = 'Ответить';
-  const author = event.currentTarget.querySelector('.comment-header div:first-child').textContent;
-  const message = event.currentTarget.querySelector('.comment-text').textContent;
-  replyId = Number(event.currentTarget.dataset.id);
+  const author = commentEl.querySelector('.comment-header div:first-child').textContent;
+  const message = commentEl.querySelector('.comment-text').textContent;
+  replyId = Number(commentEl.dataset.id);
 
   data_comments.nameInput.value = author;
   data_comments.textInput.value = message + '\n> ';
-
   reply = true;
 }
 
@@ -76,15 +75,12 @@ function addButtonClick() {
   }
 }
 
-function onLikeClick(event) {
-  event.stopPropagation();
-  const id = Number(event.currentTarget.dataset.id);
-
+function onLikeClick(buttonEl) {
+  const id = Number(buttonEl.dataset.id);
   const comment = data_comments.comments.find((c) => c.id === id);
   if (!comment) return;
-
   comment.isLiked = !comment.isLiked;
-  comment.likes = comment.isLiked ? comment.likes + 1 : comment.likes - 1;
+  comment.likes += comment.isLiked ? 1 : -1;
 }
 
 export {

@@ -25,31 +25,4 @@ export function render() {
         `;
     data_comments.commentsList.append(li);
   });
-
-  document.querySelectorAll('.like-button').forEach((button) => {
-    button.addEventListener('click', onLikeClickHandler);
-  });
-
-  document.querySelectorAll('.comment').forEach((button) => {
-    button.addEventListener('click', onCommentClickHandler);
-  });
 }
-
-function onLikeClickHandler(event) {
-  utils.onLikeClick(event);
-  render();
-}
-
-data_comments.addButton.addEventListener('click', () => {
-  utils.addButtonClick();
-  render();
-});
-
-function onCommentClickHandler(event) {
-  utils.onCommentClick(event);
-
-  render();
-}
-
-data_comments.nameInput.addEventListener('focus', utils.clearErrors);
-data_comments.textInput.addEventListener('focus', utils.clearErrors);
