@@ -3,13 +3,6 @@ import * as data_comments from './data.js';
 let nextId = 2;
 let replyId = null;
 let reply = false;
-function sanitize(str) {
-  return str
-    .replaceAll('&', '&amp;')
-    .replaceAll('<', '&lt;')
-    .replaceAll('>', '&gt;')
-    .replaceAll('"', '&quot;');
-}
 
 function clearErrors() {
   data_comments.nameInput.classList.remove('error-input');
@@ -83,12 +76,4 @@ function onLikeClick(buttonEl) {
   comment.likes += comment.isLiked ? 1 : -1;
 }
 
-export {
-  addButtonClick,
-  addComment,
-  clearErrors,
-  editComment,
-  onCommentClick,
-  onLikeClick,
-  sanitize,
-};
+export { addButtonClick, addComment, clearErrors, editComment, onCommentClick, onLikeClick };

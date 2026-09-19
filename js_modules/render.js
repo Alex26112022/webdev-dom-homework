@@ -1,5 +1,5 @@
 import * as data_comments from './data.js';
-import * as utils from './utils.js';
+import { sanitize } from './sanitize.js';
 
 export function render() {
   data_comments.commentsList.innerHTML = '';
@@ -10,11 +10,11 @@ export function render() {
     li.dataset.id = comment.id;
     li.innerHTML = `
           <div class="comment-header">
-            <div>${utils.sanitize(comment.name)}</div>
+            <div>${sanitize(comment.name)}</div>
             <div>${comment.date}</div>
           </div>
           <div class="comment-body">
-            <div class="comment-text">${utils.sanitize(comment.text).replace(/\n/g, '<br><br>')}</div>
+            <div class="comment-text">${sanitize(comment.text).replace(/\n/g, '<br><br>')}</div>
           </div>
           <div class="comment-footer">
             <div class="likes">
