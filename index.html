@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
   <head>
     <title>Проект "Комменты"</title>
@@ -8,14 +8,9 @@
 
   <body>
     <div class="container">
-      <ul class="comments">
-      </ul>
+      <ul class="comments"></ul>
       <div class="add-form">
-        <input
-          type="text"
-          class="add-form-name"
-          placeholder="Введите ваше имя"
-        />
+        <input type="text" class="add-form-name" placeholder="Введите ваше имя" />
         <textarea
           type="textarea"
           class="add-form-text"
@@ -30,9 +25,9 @@
   </body>
 
   <script>
-    "use strict";
+    'use strict';
     // Код писать здесь
-    console.log("It works!");
+    console.log('It works!');
 
     let comments = [
       {
@@ -41,7 +36,7 @@
         date: '12.02.22 12:18',
         text: 'Это будет первый комментарий на этой странице',
         likes: 3,
-        isLiked: false
+        isLiked: false,
       },
       {
         id: 1,
@@ -49,8 +44,8 @@
         date: '13.02.22 19:22',
         text: 'Мне нравится как оформлена эта страница! ❤',
         likes: 75,
-        isLiked: true
-      }
+        isLiked: true,
+      },
     ];
 
     let nextId = 2;
@@ -69,13 +64,13 @@
       day: '2-digit',
       hour: '2-digit',
       minute: '2-digit',
-      hour12: false
+      hour12: false,
     };
 
     function render() {
       commentsList.innerHTML = '';
 
-      comments.forEach(comment => {
+      comments.forEach((comment) => {
         const li = document.createElement('li');
         li.className = 'comment';
         li.dataset.id = comment.id;
@@ -97,11 +92,11 @@
         commentsList.append(li);
       });
 
-      document.querySelectorAll('.like-button').forEach(button => {
+      document.querySelectorAll('.like-button').forEach((button) => {
         button.addEventListener('click', onLikeClick);
       });
 
-      document.querySelectorAll('.comment').forEach(button => {
+      document.querySelectorAll('.comment').forEach((button) => {
         button.addEventListener('click', onCommentClick);
       });
     }
@@ -110,7 +105,7 @@
       event.stopPropagation();
       const id = Number(event.currentTarget.dataset.id);
 
-      const comment = comments.find(c => c.id === id);
+      const comment = comments.find((c) => c.id === id);
       if (!comment) return;
 
       comment.isLiked = !comment.isLiked;
@@ -133,7 +128,6 @@
         reply = false;
       }
 
-
       render();
     });
 
@@ -154,7 +148,7 @@
         date: date,
         text: text,
         likes: 0,
-        isLiked: false
+        isLiked: false,
       });
 
       nameInput.value = '';
@@ -164,7 +158,7 @@
     function editComment() {
       addButton.textContent = 'Написать';
 
-      comments.forEach(comment => {
+      comments.forEach((comment) => {
         if (comment.id === replyId) {
           comment.text = textInput.value.trim();
         }
@@ -180,7 +174,9 @@
 
     function onCommentClick(event) {
       addButton.textContent = 'Ответить';
-      const author = event.currentTarget.querySelector('.comment-header div:first-child').textContent;
+      const author = event.currentTarget.querySelector(
+        '.comment-header div:first-child',
+      ).textContent;
       const message = event.currentTarget.querySelector('.comment-text').textContent;
       replyId = Number(event.currentTarget.dataset.id);
 
@@ -201,6 +197,5 @@
     }
 
     render();
-
   </script>
 </html>
