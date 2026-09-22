@@ -1,8 +1,7 @@
 import * as data_comments from './data.js';
+import { render } from './render.js';
 
 let nextId = 2;
-let replyId = null;
-let reply = false;
 
 function clearErrors() {
   data_comments.nameInput.classList.remove('error-input');
@@ -15,7 +14,7 @@ function addComment() {
 
   if (!name) data_comments.nameInput.classList.add('error-input');
   if (!text) data_comments.textInput.classList.add('error-input');
-  if (!name || !text) return;
+  if (!name || !text) return false;
 
   const now = new Date();
   const date = now.toLocaleString('ru-RU', data_comments.dateOptions).replace(',', '');
@@ -31,41 +30,15 @@ function addComment() {
 
   data_comments.nameInput.value = '';
   data_comments.textInput.value = '';
-}
-
-function editComment() {
-  data_comments.addButton.textContent = 'Написать';
-
-  data_comments.comments.forEach((comment) => {
-    if (comment.id === replyId) {
-      comment.text = data_comments.textInput.value.trim();
-    }
-  });
-
-  replyId = null;
-  data_comments.nameInput.value = '';
-  data_comments.textInput.value = '';
+  return true;
 }
 
 function onCommentClick(commentEl) {
-  data_comments.addButton.textContent = 'Ответить';
   const author = commentEl.querySelector('.comment-header div:first-child').textContent;
   const message = commentEl.querySelector('.comment-text').textContent;
-  replyId = Number(commentEl.dataset.id);
 
-  data_comments.nameInput.value = author;
-  data_comments.textInput.value = message + '\n> ';
-  reply = true;
-}
-
-function addButtonClick() {
-  clearErrors();
-  if (!reply) {
-    addComment();
-  } else {
-    editComment();
-    reply = false;
-  }
+  data_comments.textInput.value = `${author}: ${message}\n> `;
+  data_comments.textInput.focus();
 }
 
 function onLikeClick(buttonEl) {
@@ -76,4 +49,10 @@ function onLikeClick(buttonEl) {
   comment.likes += comment.isLiked ? 1 : -1;
 }
 
-export { addButtonClick, addComment, clearErrors, editComment, onCommentClick, onLikeClick };
+function addButtonClick() {
+  clearErrors();
+  addComment();
+  render();
+}
+
+export { addButtonClick, addComment, clearErrors, onCommentClick, onLikeClick };
