@@ -1,7 +1,5 @@
 import * as data_comments from './data.js';
-import { render } from './render.js';
-
-let nextId = 2;
+import { fetchAndRender } from './render.js';
 
 function clearErrors() {
   data_comments.nameInput.classList.remove('error-input');
@@ -14,23 +12,26 @@ function addComment() {
 
   if (!name) data_comments.nameInput.classList.add('error-input');
   if (!text) data_comments.textInput.classList.add('error-input');
-  if (!name || !text) return false;
+  if (!name || !text) return Promise.reject(new Error('validation'));
 
-  const now = new Date();
-  const date = now.toLocaleString('ru-RU', data_comments.dateOptions).replace(',', '');
+  return fetch('https://wedev-api.sky.pro/api/v1/alexey-denisenko/comments', {
+    method: 'POST',
+    body: JSON.stringify({ text, name }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('HTTP ' + response.status);
+      }
+      return response.json();
+    })
+    .then(() => {
+      data_comments.nameInput.value = '';
+      data_comments.textInput.value = '';
+    });
+}
 
-  data_comments.comments.push({
-    id: nextId++,
-    name: name,
-    date: date,
-    text: text,
-    likes: 0,
-    isLiked: false,
-  });
-
-  data_comments.nameInput.value = '';
-  data_comments.textInput.value = '';
-  return true;
+function dateConvert(date) {
+  return new Date(date).toLocaleString('ru-RU', data_comments.dateOptions).replace(',', '');
 }
 
 function onCommentClick(commentEl) {
@@ -51,8 +52,9 @@ function onLikeClick(buttonEl) {
 
 function addButtonClick() {
   clearErrors();
-  addComment();
-  render();
+  addComment()
+    .then(() => fetchAndRender())
+    .catch((err) => console.error('Комментарий не добавлен:', err.message));
 }
 
-export { addButtonClick, addComment, clearErrors, onCommentClick, onLikeClick };
+export { addButtonClick, addComment, clearErrors, dateConvert, onCommentClick, onLikeClick };
