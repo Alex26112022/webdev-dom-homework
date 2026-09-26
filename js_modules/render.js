@@ -28,9 +28,18 @@ export function renderComments() {
   });
 }
 
-export function fetchAndRender() {
+export function fetchAndRender(showLoading = true) {
+  if (showLoading) {
+    data_comments.commentsList.innerHTML = '<p class="loading">Загрузка комментариев...</p>';
+  }
+
   return fetch('https://wedev-api.sky.pro/api/v1/alexey-denisenko/comments')
-    .then((response) => response.json())
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('HTTP ' + response.status);
+      }
+      return response.json();
+    })
     .then((data) => {
       data_comments.comments.length = 0;
       data_comments.comments.push(...data.comments);

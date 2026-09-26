@@ -50,11 +50,29 @@ function onLikeClick(buttonEl) {
   comment.likes += comment.isLiked ? 1 : -1;
 }
 
+function showLoading() {
+  data_comments.addForm.classList.add('is-hidden');
+  data_comments.loadingComment.classList.remove('is-hidden');
+}
+
+function hideLoading() {
+  data_comments.addForm.classList.remove('is-hidden');
+  data_comments.loadingComment.classList.add('is-hidden');
+}
+
 function addButtonClick() {
+  showLoading();
   clearErrors();
+
   addComment()
-    .then(() => fetchAndRender())
-    .catch((err) => console.error('Комментарий не добавлен:', err.message));
+    .then(() => {
+      hideLoading();
+      return fetchAndRender(false);
+    })
+    .catch((err) => {
+      hideLoading();
+      console.error('Комментарий не добавлен:', err.message);
+    });
 }
 
 export { addButtonClick, addComment, clearErrors, dateConvert, onCommentClick, onLikeClick };
