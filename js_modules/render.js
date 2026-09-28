@@ -20,7 +20,7 @@ export function renderComments() {
       <div class="comment-footer">
         <div class="likes">
           <span class="likes-counter">${comment.likes}</span>
-          <button class="like-button ${comment.isLiked ? '-active-like' : ''}" data-id="${comment.id}"></button>
+          <button class="like-button ${comment.isLiked ? '-active-like' : ''} ${comment.isLikeLoading ? '-loading-like' : ''}" data-id="${comment.id}"></button>
         </div>
       </div>
     `;
