@@ -1,5 +1,5 @@
 import * as data_comments from './data.js';
-import { fetchAndRender } from './render.js';
+import { fetchAndRender, renderComments } from './render.js';
 
 function clearErrors() {
   data_comments.nameInput.classList.remove('error-input');
@@ -46,15 +46,50 @@ function onLikeClick(buttonEl) {
   const id = Number(buttonEl.dataset.id);
   const comment = data_comments.comments.find((c) => c.id === id);
   if (!comment) return;
-  comment.isLiked = !comment.isLiked;
-  comment.likes += comment.isLiked ? 1 : -1;
+  if (comment.isLikeLoading) return;
+
+  comment.isLikeLoading = true;
+  renderComments();
+
+  return delay(1000).then(() => {
+    comment.isLiked = !comment.isLiked;
+    comment.likes += comment.isLiked ? 1 : -1;
+    comment.isLikeLoading = false;
+    renderComments();
+  });
+}
+
+function showLoading() {
+  data_comments.addForm.classList.add('is-hidden');
+  data_comments.loadingComment.classList.remove('is-hidden');
+}
+
+function hideLoading() {
+  data_comments.addForm.classList.remove('is-hidden');
+  data_comments.loadingComment.classList.add('is-hidden');
 }
 
 function addButtonClick() {
+  showLoading();
   clearErrors();
+
   addComment()
-    .then(() => fetchAndRender())
-    .catch((err) => console.error('Комментарий не добавлен:', err.message));
+    .then(() => {
+      hideLoading();
+      return fetchAndRender(false);
+    })
+    .catch((err) => {
+      hideLoading();
+      console.error('Комментарий не добавлен:', err.message);
+    });
+}
+
+function delay(interval = 300) {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve();
+    }, interval);
+  });
 }
 
 export { addButtonClick, addComment, clearErrors, dateConvert, onCommentClick, onLikeClick };

@@ -4,6 +4,8 @@ const commentsList = document.querySelector('.comments');
 const nameInput = document.querySelector('.add-form-name');
 const textInput = document.querySelector('.add-form-text');
 const addButton = document.querySelector('.add-form-button');
+const addForm = document.querySelector('.add-form');
+const loadingComment = document.querySelector('.loading-comment');
 
 const dateOptions = {
   year: '2-digit',
@@ -14,4 +16,13 @@ const dateOptions = {
   hour12: false,
 };
 
-export { addButton, comments, commentsList, dateOptions, nameInput, textInput };
+export {
+  addButton,
+  addForm,
+  comments,
+  commentsList,
+  dateOptions,
+  loadingComment,
+  nameInput,
+  textInput,
+};

@@ -1,5 +1,4 @@
 import * as data_comments from './data.js';
-import { renderComments } from './render.js';
 import * as utils from './utils.js';
 
 export function initEventHandlers() {
@@ -13,7 +12,6 @@ function onCommentsListClick(event) {
   const likeButton = event.target.closest('.like-button');
   if (likeButton) {
     utils.onLikeClick(likeButton);
-    renderComments();
     return;
   }
 

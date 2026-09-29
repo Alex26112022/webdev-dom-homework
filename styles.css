@@ -139,3 +139,36 @@ body {
 .error-input {
   background-color: red;
 }
+.loading {
+  font-size: 24px;
+  color: #7334ea;
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+@keyframes like-beat {
+  0% {
+    transform: scale(1);
+  }
+  15% {
+    transform: scale(1.2);
+  }
+  30% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.15);
+  }
+  60% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.-loading-like {
+  animation: like-beat 1.5s ease-in-out infinite;
+}
