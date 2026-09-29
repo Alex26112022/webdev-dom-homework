@@ -1,4 +1,5 @@
 import * as api from './api.js';
+import { MAX_RETRY } from './constants.js';
 import * as data_comments from './data.js';
 import { fetchAndRender, renderComments } from './render.js';
 
@@ -7,7 +8,7 @@ function clearErrors() {
   data_comments.textInput.classList.remove('error-input');
 }
 
-function addComment() {
+function addComment(attempt = 1) {
   const name = data_comments.nameInput.value.trim();
   const text = data_comments.textInput.value.trim();
 
@@ -15,10 +16,18 @@ function addComment() {
   if (!text) data_comments.textInput.classList.add('error-input');
   if (!name || !text) return Promise.reject(new Error('validation'));
 
-  return api.apiPostComment(text, name).then(() => {
-    data_comments.nameInput.value = '';
-    data_comments.textInput.value = '';
-  });
+  return api
+    .apiPostComment(text, name)
+    .then(() => {
+      data_comments.nameInput.value = '';
+      data_comments.textInput.value = '';
+    })
+    .catch((err) => {
+      if (err.message === 'Сервер сломался, попробуй позже' && attempt < MAX_RETRY) {
+        return addComment(attempt + 1);
+      }
+      throw err;
+    });
 }
 
 function onCommentClick(commentEl) {

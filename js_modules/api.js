@@ -1,5 +1,4 @@
-const URL = 'https://wedev-api.sky.pro/api/v1/alexey-denisenko/comments';
-const OFFLINE_MESSAGE = 'Кажется, у вас сломался интернет, попробуйте позже';
+import { OFFLINE_MESSAGE, URL } from './constants.js';
 
 export function apiGetComments() {
   return fetch(URL)
