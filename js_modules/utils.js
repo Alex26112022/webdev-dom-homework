@@ -67,7 +67,7 @@ function addButtonClick() {
     })
     .catch((err) => {
       hideLoading();
-      console.error('Комментарий не добавлен:', err.message);
+      alert(err.message);
     });
 }
 
