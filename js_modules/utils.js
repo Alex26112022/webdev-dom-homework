@@ -1,3 +1,4 @@
+import * as api from './api.js';
 import * as data_comments from './data.js';
 import { fetchAndRender, renderComments } from './render.js';
 
@@ -14,24 +15,10 @@ function addComment() {
   if (!text) data_comments.textInput.classList.add('error-input');
   if (!name || !text) return Promise.reject(new Error('validation'));
 
-  return fetch('https://wedev-api.sky.pro/api/v1/alexey-denisenko/comments', {
-    method: 'POST',
-    body: JSON.stringify({ text, name }),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('HTTP ' + response.status);
-      }
-      return response.json();
-    })
-    .then(() => {
-      data_comments.nameInput.value = '';
-      data_comments.textInput.value = '';
-    });
-}
-
-function dateConvert(date) {
-  return new Date(date).toLocaleString('ru-RU', data_comments.dateOptions).replace(',', '');
+  return api.apiPostComment(text, name).then(() => {
+    data_comments.nameInput.value = '';
+    data_comments.textInput.value = '';
+  });
 }
 
 function onCommentClick(commentEl) {
@@ -92,4 +79,4 @@ function delay(interval = 300) {
   });
 }
 
-export { addButtonClick, addComment, clearErrors, dateConvert, onCommentClick, onLikeClick };
+export { addButtonClick, addComment, clearErrors, onCommentClick, onLikeClick };

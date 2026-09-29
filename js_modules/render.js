@@ -1,6 +1,7 @@
+import * as api from './api.js';
 import * as data_comments from './data.js';
+import { dateConvert } from './format.js';
 import { sanitize } from './sanitize.js';
-import { dateConvert } from './utils.js';
 
 export function renderComments() {
   data_comments.commentsList.innerHTML = '';
@@ -30,19 +31,11 @@ export function renderComments() {
 
 export function fetchAndRender(showLoading = true) {
   if (showLoading) {
-    data_comments.commentsList.innerHTML = '<p class="loading">Загрузка комментариев...</p>';
+    data_comments.commentsList.innerHTML = '<li class="loading">Загрузка комментариев...</li>';
   }
-
-  return fetch('https://wedev-api.sky.pro/api/v1/alexey-denisenko/comments')
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('HTTP ' + response.status);
-      }
-      return response.json();
-    })
-    .then((data) => {
-      data_comments.comments.length = 0;
-      data_comments.comments.push(...data.comments);
-      renderComments();
-    });
+  return api.apiGetComments().then((comments) => {
+    data_comments.comments.length = 0;
+    data_comments.comments.push(...comments);
+    renderComments();
+  });
 }
