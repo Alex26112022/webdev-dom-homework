@@ -1,7 +1,9 @@
 import { OFFLINE_MESSAGE, URL } from './constants.js';
 
-export function apiGetComments() {
-  return fetch(URL)
+export function apiGetComments(token) {
+  return fetch(URL, {
+    headers: { Authorization: `Bearer ${token}` },
+  })
     .then((response) => {
       if (!response.ok) {
         throw new Error('HTTP ' + response.status);

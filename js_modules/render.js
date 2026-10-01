@@ -29,11 +29,12 @@ export function renderComments() {
   });
 }
 
-export function fetchAndRender(showLoading = true) {
+export function fetchAndRender(token, showLoading = true) {
+  console.log(token);
   if (showLoading) {
     data_comments.commentsList.innerHTML = '<li class="loading">Загрузка комментариев...</li>';
   }
-  return api.apiGetComments().then((comments) => {
+  return api.apiGetComments(token).then((comments) => {
     data_comments.comments.length = 0;
     data_comments.comments.push(...comments);
     renderComments();

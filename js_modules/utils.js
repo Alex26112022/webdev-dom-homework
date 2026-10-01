@@ -1,4 +1,5 @@
 import * as api from './api.js';
+import { getToken } from './auth.js';
 import { MAX_RETRY } from './constants.js';
 import * as data_comments from './data.js';
 import { fetchAndRender, renderComments } from './render.js';
@@ -66,13 +67,14 @@ function hideLoading() {
 }
 
 function addButtonClick() {
+  const token = getToken();
   showLoading();
   clearErrors();
 
   addComment()
     .then(() => {
       hideLoading();
-      return fetchAndRender(false);
+      return fetchAndRender(token, false);
     })
     .catch((err) => {
       hideLoading();
