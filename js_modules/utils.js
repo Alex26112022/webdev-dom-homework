@@ -3,11 +3,7 @@ import { getToken } from './auth.js';
 import { MAX_RETRY } from './constants.js';
 import * as data_comments from './data.js';
 import { fetchAndRender, renderComments } from './render.js';
-
-function clearErrors() {
-  data_comments.nameInput.classList.remove('error-input');
-  data_comments.textInput.classList.remove('error-input');
-}
+import * as utils_view from './utils_view.js';
 
 function addComment(attempt = 1) {
   const name = data_comments.nameInput.value.trim();
@@ -56,29 +52,19 @@ function onLikeClick(buttonEl) {
   });
 }
 
-function showLoading() {
-  data_comments.addForm.classList.add('is-hidden');
-  data_comments.loadingComment.classList.remove('is-hidden');
-}
-
-function hideLoading() {
-  data_comments.addForm.classList.remove('is-hidden');
-  data_comments.loadingComment.classList.add('is-hidden');
-}
-
 function addButtonClick() {
   const token = getToken();
-  showLoading();
-  clearErrors();
+  utils_view.showLoading();
+  utils_view.clearErrors();
 
   addComment()
     .then(() => {
-      hideLoading();
+      utils_view.hideLoading();
       return fetchAndRender(token, false);
     })
     .catch((err) => {
-      hideLoading();
-      alert(err.message);
+      utils_view.hideLoading();
+      console.log(err.message);
     });
 }
 
@@ -90,4 +76,4 @@ function delay(interval = 300) {
   });
 }
 
-export { addButtonClick, addComment, clearErrors, onCommentClick, onLikeClick };
+export { addButtonClick, addComment, onCommentClick, onLikeClick };

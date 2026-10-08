@@ -2,8 +2,10 @@ import * as api from './api.js';
 import * as data_comments from './data.js';
 import { dateConvert } from './format.js';
 import { sanitize } from './sanitize.js';
+import { viewAuthAndForm } from './utils_view.js';
 
-export function renderComments() {
+export function renderComments(authorized) {
+  viewAuthAndForm(authorized);
   data_comments.commentsList.innerHTML = '';
 
   data_comments.comments.forEach((comment) => {
@@ -30,13 +32,12 @@ export function renderComments() {
 }
 
 export function fetchAndRender(token, showLoading = true) {
-  console.log(token);
   if (showLoading) {
-    data_comments.commentsList.innerHTML = '<li class="loading">Загрузка комментариев...</li>';
+    data_comments.commentsList.innerHTML = '<li class="loading text">Загрузка комментариев...</li>';
   }
-  return api.apiGetComments(token).then((comments) => {
+  return api.apiGetComments(token).then(({ comments, authorized }) => {
     data_comments.comments.length = 0;
     data_comments.comments.push(...comments);
-    renderComments();
+    renderComments(authorized);
   });
 }

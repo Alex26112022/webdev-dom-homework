@@ -8,7 +8,7 @@ const token = getToken();
 fetchAndRender(token).catch((err) => {
   console.error('Не удалось загрузить комментарии:', err.message);
   data_comments.commentsList.innerHTML =
-    '<li class="loading">Не удалось загрузить комментарии</li>';
+    '<li class="loading text">Не удалось загрузить комментарии</li>';
 });
 
 initEventHandlers();

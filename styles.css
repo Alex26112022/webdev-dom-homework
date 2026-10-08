@@ -139,7 +139,8 @@ body {
 .error-input {
   background-color: red;
 }
-.loading {
+
+.text {
   font-size: 24px;
   color: #7334ea;
 }
