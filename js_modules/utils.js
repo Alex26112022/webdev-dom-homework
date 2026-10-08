@@ -6,17 +6,15 @@ import { fetchAndRender, renderComments } from './render.js';
 import * as utils_view from './utils_view.js';
 
 function addComment(attempt = 1) {
-  const name = data_comments.nameInput.value.trim();
   const text = data_comments.textInput.value.trim();
+  const name = data_comments.nameInput;
 
-  if (!name) data_comments.nameInput.classList.add('error-input');
   if (!text) data_comments.textInput.classList.add('error-input');
-  if (!name || !text) return Promise.reject(new Error('validation'));
+  if (!text) return Promise.reject(new Error('validation'));
 
   return api
     .apiPostComment(text, name)
     .then(() => {
-      data_comments.nameInput.value = '';
       data_comments.textInput.value = '';
     })
     .catch((err) => {
@@ -42,13 +40,13 @@ function onLikeClick(buttonEl) {
   if (comment.isLikeLoading) return;
 
   comment.isLikeLoading = true;
-  renderComments();
+  renderComments(true);
 
   return delay(1000).then(() => {
     comment.isLiked = !comment.isLiked;
     comment.likes += comment.isLiked ? 1 : -1;
     comment.isLikeLoading = false;
-    renderComments();
+    renderComments(true);
   });
 }
 
@@ -60,7 +58,7 @@ function addButtonClick() {
   addComment()
     .then(() => {
       utils_view.hideLoading();
-      return fetchAndRender(token, false);
+      return fetchAndRender(token);
     })
     .catch((err) => {
       utils_view.hideLoading();

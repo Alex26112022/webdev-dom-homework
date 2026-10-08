@@ -5,10 +5,15 @@ export function getToken() {
   return localStorage.getItem('token');
 }
 
+export function getName() {
+  return localStorage.getItem('name');
+}
+
 export function setToken() {
-  return apiUserAuthorizationToken().then((token) => {
+  return apiUserAuthorizationToken().then(({ token, name }) => {
     if (getToken() !== token) {
       localStorage.setItem('token', token);
+      localStorage.setItem('name', name);
     }
   });
 }

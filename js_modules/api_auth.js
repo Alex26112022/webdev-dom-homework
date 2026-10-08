@@ -11,7 +11,9 @@ export function apiUserAuthorizationToken(login = 'admin', password = 'admin') {
     })
     .then((data) => {
       console.log(data);
-      return data.token;
+      const token = data.token;
+      const name = data.name;
+      return { token, name };
     })
     .catch((error) => {
       console.log(error);

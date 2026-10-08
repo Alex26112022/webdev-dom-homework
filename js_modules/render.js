@@ -4,7 +4,11 @@ import { dateConvert } from './format.js';
 import { sanitize } from './sanitize.js';
 import { viewAuthAndForm } from './utils_view.js';
 
-export function renderComments(authorized) {
+export function renderComments(authorized, name = '') {
+  if (authorized) {
+    data_comments.nameInput.value = name;
+    data_comments.nameInput.setAttribute('readonly', true);
+  }
   viewAuthAndForm(authorized);
   data_comments.commentsList.innerHTML = '';
 
@@ -31,13 +35,13 @@ export function renderComments(authorized) {
   });
 }
 
-export function fetchAndRender(token, showLoading = true) {
+export function fetchAndRender(token, name, showLoading = false) {
   if (showLoading) {
     data_comments.commentsList.innerHTML = '<li class="loading text">Загрузка комментариев...</li>';
   }
   return api.apiGetComments(token).then(({ comments, authorized }) => {
     data_comments.comments.length = 0;
     data_comments.comments.push(...comments);
-    renderComments(authorized);
+    renderComments(authorized, name);
   });
 }

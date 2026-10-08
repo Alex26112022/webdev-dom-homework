@@ -33,6 +33,9 @@ export function apiPostComment(text, name) {
       if (response.status === 400) {
         throw new Error('Имя и комментарий должны быть не короче 3 символов');
       }
+      if (response.status === 401) {
+        throw new Error('Ошибка авторизации');
+      }
       if (response.status === 500) {
         throw new Error('Сервер сломался, попробуй позже');
       }

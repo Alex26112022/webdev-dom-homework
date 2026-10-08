@@ -1,7 +1,6 @@
 import * as data_comments from './data.js';
 
 function clearErrors() {
-  data_comments.nameInput.classList.remove('error-input');
   data_comments.textInput.classList.remove('error-input');
 }
 
