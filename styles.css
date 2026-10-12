@@ -183,3 +183,7 @@ body {
 .form-auth-row {
   justify-content: center;
 }
+
+.on-main {
+  margin: 10px;
+}

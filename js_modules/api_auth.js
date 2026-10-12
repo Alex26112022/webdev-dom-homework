@@ -1,6 +1,6 @@
 import { URL_AUTHORIZATION } from './constants.js';
 
-export function apiUserAuthorizationToken(login = 'admin', password = 'admin') {
+export function apiUserAuthorizationToken(login, password) {
   return fetch(URL_AUTHORIZATION, {
     method: 'POST',
     body: JSON.stringify({ login, password }),
@@ -11,8 +11,8 @@ export function apiUserAuthorizationToken(login = 'admin', password = 'admin') {
     })
     .then((data) => {
       console.log(data);
-      const token = data.token;
-      const name = data.name;
+      const token = data.user.token;
+      const name = data.user.name;
       return { token, name };
     })
     .catch((error) => {

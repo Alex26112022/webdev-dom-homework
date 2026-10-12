@@ -1,5 +1,5 @@
 import * as api from './api.js';
-import { getToken } from './auth.js';
+import { getToken } from './auth_utils.js';
 import { MAX_RETRY } from './constants.js';
 import * as data_comments from './data.js';
 import { fetchAndRender, renderComments } from './render.js';

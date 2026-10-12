@@ -10,14 +10,20 @@
     <div class="container">
       <form class="add-form form-auth">
         <div>
-          <input type="text" class="add-form-name" placeholder="Введите логин" />
-          <input type="password" class="add-form-name" placeholder="Введите пароль" />
+          <input type="text" id="auth-login" class="add-form-name" placeholder="Введите логин" />
+          <input
+            type="password"
+            id="auth-password"
+            class="add-form-name"
+            placeholder="Введите пароль"
+          />
         </div>
         <div class="add-form-row form-auth-row">
-          <button type="submit" class="add-form-button" id="authorization">Авторизоваться</button>
+          <button type="button" class="add-form-button" id="auth-button">Авторизоваться</button>
         </div>
       </form>
+      <a href="index.html" class="text on-main">На главную</a>
     </div>
-    <script type="module" src="auth.js"></script>
+    <script type="module" src="js_modules/auth.js"></script>
   </body>
 </html>

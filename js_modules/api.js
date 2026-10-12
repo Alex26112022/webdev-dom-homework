@@ -1,16 +1,10 @@
-import { isUnauthorizedPayload } from './auth.js';
+import { isAuthorized } from './auth_utils.js';
 import { OFFLINE_MESSAGE, URL } from './constants.js';
 
 export function apiGetComments(token) {
   return fetch(URL, {
     headers: { Authorization: `Bearer ${token}` },
   })
-    .catch((error) => {
-      if (error instanceof TypeError) {
-        throw new Error(OFFLINE_MESSAGE);
-      }
-      throw error;
-    })
     .then((response) => {
       if (!response.ok) {
         throw new Error('HTTP ' + response.status);
@@ -19,8 +13,14 @@ export function apiGetComments(token) {
     })
     .then((data) => {
       const comments = Array.isArray(data.comments) ? data.comments : [];
-      const authorized = !isUnauthorizedPayload(comments);
+      const authorized = isAuthorized();
       return { comments, authorized };
+    })
+    .catch((error) => {
+      if (error instanceof TypeError) {
+        throw new Error(OFFLINE_MESSAGE);
+      }
+      throw error;
     });
 }
 
