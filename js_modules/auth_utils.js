@@ -15,6 +15,8 @@ export function setToken(login, password) {
       localStorage.setItem('token', token);
       localStorage.setItem('name', name);
     }
+
+    window.location.href = '/';
   });
 }
 

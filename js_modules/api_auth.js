@@ -6,16 +6,16 @@ export function apiUserAuthorizationToken(login, password) {
     body: JSON.stringify({ login, password }),
   })
     .then((response) => {
-      console.log(response);
-      return response.json();
+      if (response.status === 201) {
+        return response.json();
+      } else {
+        alert('Ошибка авторизации');
+        return Promise.reject(new Error('Ошибка авторизации'));
+      }
     })
     .then((data) => {
-      console.log(data);
       const token = data.user.token;
       const name = data.user.name;
       return { token, name };
-    })
-    .catch((error) => {
-      console.log(error);
     });
 }

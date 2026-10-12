@@ -10,12 +10,21 @@
     <div class="container">
       <form class="add-form form-auth">
         <div>
-          <input type="text" id="auth-login" class="add-form-name" placeholder="Введите логин" />
+          <input
+            type="text"
+            id="auth-login"
+            name="auth-login"
+            class="add-form-name"
+            placeholder="Введите логин"
+            autocomplete="on"
+          />
           <input
             type="password"
             id="auth-password"
+            name="auth-password"
             class="add-form-name"
             placeholder="Введите пароль"
+            autocomplete="on"
           />
         </div>
         <div class="add-form-row form-auth-row">
