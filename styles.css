@@ -173,3 +173,13 @@ body {
 .-loading-like {
   animation: like-beat 1.5s ease-in-out infinite;
 }
+
+.form-auth {
+  width: 40%;
+  flex-wrap: wrap;
+  align-content: center;
+}
+
+.form-auth-row {
+  justify-content: center;
+}
