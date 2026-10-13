@@ -51,3 +51,14 @@ export function apiPostComment(text, name) {
       throw error;
     });
 }
+
+export function apiOnLikeCkick(token, likeId) {
+  return fetch(URL + `/${likeId}/toggle-like`, {
+    method: 'POST',
+    headers: { Authorization: `Bearer ${token}` },
+  }).then((response) => {
+    if (response.status !== 200) {
+      throw new Error('HTTP ' + response.status);
+    }
+  });
+}

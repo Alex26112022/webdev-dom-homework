@@ -1,5 +1,5 @@
 import * as api from './api.js';
-import { getToken } from './auth_utils.js';
+import { getName, getToken } from './auth_utils.js';
 import { MAX_RETRY } from './constants.js';
 import * as data_comments from './data.js';
 import { fetchAndRender, renderComments } from './render.js';
@@ -34,19 +34,20 @@ function onCommentClick(commentEl) {
 }
 
 function onLikeClick(buttonEl) {
-  const id = Number(buttonEl.dataset.id);
+  const token = getToken();
+  const name = getName();
+  const id = buttonEl.dataset.id;
   const comment = data_comments.comments.find((c) => c.id === id);
+
   if (!comment) return;
   if (comment.isLikeLoading) return;
 
   comment.isLikeLoading = true;
   renderComments(true);
 
-  return delay(1000).then(() => {
-    comment.isLiked = !comment.isLiked;
-    comment.likes += comment.isLiked ? 1 : -1;
+  return api.apiOnLikeCkick(token, id).then(() => {
     comment.isLikeLoading = false;
-    renderComments(true);
+    fetchAndRender(token, name, true);
   });
 }
 
@@ -64,14 +65,6 @@ function addButtonClick() {
       utils_view.hideLoading();
       console.log(err.message);
     });
-}
-
-function delay(interval = 300) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, interval);
-  });
 }
 
 export { addButtonClick, addComment, onCommentClick, onLikeClick };
