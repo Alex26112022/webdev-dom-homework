@@ -24,10 +24,11 @@ export function apiGetComments(token) {
     });
 }
 
-export function apiPostComment(text, name) {
+export function apiPostComment(token, text) {
   return fetch(URL, {
     method: 'POST',
-    body: JSON.stringify({ text, name, forceError: true }),
+    headers: { Authorization: `Bearer ${token}` },
+    body: JSON.stringify({ text: text }),
   })
     .then((response) => {
       if (response.status === 400) {

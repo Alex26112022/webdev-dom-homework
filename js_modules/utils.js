@@ -6,14 +6,14 @@ import { fetchAndRender, renderComments } from './render.js';
 import * as utils_view from './utils_view.js';
 
 function addComment(attempt = 1) {
+  const token = getToken();
   const text = data_comments.textInput.value.trim();
-  const name = data_comments.nameInput;
 
   if (!text) data_comments.textInput.classList.add('error-input');
   if (!text) return Promise.reject(new Error('validation'));
 
   return api
-    .apiPostComment(text, name)
+    .apiPostComment(token, text)
     .then(() => {
       data_comments.textInput.value = '';
     })
