@@ -35,7 +35,7 @@ export function renderComments(authorized, name = '') {
   });
 }
 
-export function fetchAndRender(token, name, showLoading = false) {
+export function fetchAndRender(token, name = '', showLoading = false) {
   if (showLoading) {
     data_comments.commentsList.innerHTML = '<li class="loading text">Загрузка комментариев...</li>';
   }

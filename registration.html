@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="container">
+      <form class="add-form form-auth form-auth-registration">
+        <div>
+          <input
+            type="text"
+            id="reg-login"
+            name="reg-login"
+            class="add-form-name"
+            placeholder="Введите логин"
+            autocomplete="on"
+          />
+          <input
+            type="text"
+            id="reg-name"
+            name="reg-name"
+            class="add-form-name"
+            placeholder="Введите имя"
+            autocomplete="on"
+          />
+          <input
+            type="password"
+            id="reg-password"
+            name="reg-password"
+            class="add-form-name"
+            placeholder="Введите пароль"
+            autocomplete="on"
+          />
+        </div>
+        <div class="add-form-row form-auth-row">
+          <button type="submit" class="add-form-button" id="reg-button">Зарегистрироваться</button>
+        </div>
+      </form>
+      <div>
+      <a href="index.html" class="text navigation">На главную</a>
+      <a href="authorization.html" class="text navigation">Вход</a>
+      </div>
+    </div>
+    <script type="module" src="js_modules/auth.js"></script>
+  </body>
+</html>

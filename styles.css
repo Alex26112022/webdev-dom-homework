@@ -184,6 +184,10 @@ body {
   justify-content: center;
 }
 
-.on-main {
+.navigation {
   margin: 10px;
+}
+
+.form-auth-registration {
+  width: 58%;
 }
