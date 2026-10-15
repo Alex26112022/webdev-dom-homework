@@ -1,4 +1,4 @@
-import { apiUserAuthorizationToken } from './api_auth.js';
+import { apiUserAuthorizationToken, apiUserRegistration } from './api_auth.js';
 import { ADMIN_MARKER } from './constants.js';
 
 export function getToken() {
@@ -17,6 +17,12 @@ export function setToken(login, password) {
     }
 
     window.location.href = '/';
+  });
+}
+
+export function registerUser(login, name, password) {
+  apiUserRegistration(login, name, password).then(() => {
+    window.location.href = '/authorization.html';
   });
 }
 
