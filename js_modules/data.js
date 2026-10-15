@@ -6,6 +6,7 @@ const textInput = document.querySelector('.add-form-text');
 const addButton = document.querySelector('.add-form-button');
 const addForm = document.querySelector('.add-form');
 const loadingComment = document.querySelector('.loading-comment');
+const authMessage = document.querySelector('.auth-message');
 
 const dateOptions = {
   year: '2-digit',
@@ -19,6 +20,7 @@ const dateOptions = {
 export {
   addButton,
   addForm,
+  authMessage,
   comments,
   commentsList,
   dateOptions,
