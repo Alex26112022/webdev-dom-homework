@@ -1,5 +1,5 @@
 import * as api from './api.js';
-import { getName, getToken } from './auth_utils.js';
+import { getName, getToken, isAuthorized, logout } from './auth_utils.js';
 import { MAX_RETRY } from './constants.js';
 import * as data_comments from './data.js';
 import { fetchAndRender, renderComments } from './render.js';
@@ -36,6 +36,7 @@ function onCommentClick(commentEl) {
 function onLikeClick(buttonEl) {
   const token = getToken();
   const name = getName();
+  const authorized = isAuthorized();
   const id = buttonEl.dataset.id;
   const comment = data_comments.comments.find((c) => c.id === id);
 
@@ -43,12 +44,24 @@ function onLikeClick(buttonEl) {
   if (comment.isLikeLoading) return;
 
   comment.isLikeLoading = true;
-  renderComments(true);
+  renderComments(authorized, name);
 
-  return api.apiOnLikeCkick(token, id).then(() => {
-    comment.isLikeLoading = false;
-    fetchAndRender(token, name, true);
-  });
+  return api
+    .apiOnLikeClick(token, id)
+    .then((data) => {
+      comment.likes = data.result.likes;
+      comment.isLiked = data.result.isLiked;
+      comment.isLikeLoading = false;
+      renderComments(authorized, name);
+    })
+    .catch((err) => {
+      comment.isLikeLoading = false;
+      if (err.message === 'Ошибка авторизации') {
+        return logout();
+      }
+      renderComments(authorized, name);
+      console.log(err.message);
+    });
 }
 
 function addButtonClick() {
@@ -59,10 +72,13 @@ function addButtonClick() {
   addComment()
     .then(() => {
       utils_view.hideLoading();
-      return fetchAndRender(token);
+      return fetchAndRender(token, getName());
     })
     .catch((err) => {
       utils_view.hideLoading();
+      if (err.message === 'Ошибка авторизации') {
+        return logout();
+      }
       console.log(err.message);
     });
 }

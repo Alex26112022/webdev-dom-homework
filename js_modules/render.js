@@ -1,4 +1,5 @@
 import * as api from './api.js';
+import { isAuthorized } from './auth_utils.js';
 import * as data_comments from './data.js';
 import { dateConvert } from './format.js';
 import { sanitize } from './sanitize.js';
@@ -8,6 +9,9 @@ export function renderComments(authorized, name = '') {
   if (authorized) {
     data_comments.nameInput.value = name;
     data_comments.nameInput.setAttribute('readonly', true);
+  } else {
+    data_comments.nameInput.value = '';
+    data_comments.nameInput.removeAttribute('readonly');
   }
   viewAuthAndForm(authorized);
   data_comments.commentsList.innerHTML = '';
@@ -39,9 +43,9 @@ export function fetchAndRender(token, name = '', showLoading = false) {
   if (showLoading) {
     data_comments.commentsList.innerHTML = '<li class="loading text">Загрузка комментариев...</li>';
   }
-  return api.apiGetComments(token).then(({ comments, authorized }) => {
+  return api.apiGetComments(token).then((comments) => {
     data_comments.comments.length = 0;
     data_comments.comments.push(...comments);
-    renderComments(authorized, name);
+    renderComments(isAuthorized(), name);
   });
 }

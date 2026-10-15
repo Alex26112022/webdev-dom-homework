@@ -14,21 +14,21 @@ function hideLoading() {
   data_comments.loadingComment.classList.add('is-hidden');
 }
 
-function showAuthAndForm() {
+function showAuthMessage() {
   data_comments.addForm.classList.add('is-hidden');
   data_comments.authMessage.classList.remove('is-hidden');
 }
 
-function hideAuthAndForm() {
+function showAddForm() {
   data_comments.addForm.classList.remove('is-hidden');
   data_comments.authMessage.classList.add('is-hidden');
 }
 
 function viewAuthAndForm(authorized) {
   if (authorized) {
-    hideAuthAndForm();
+    showAddForm();
   } else {
-    showAuthAndForm();
+    showAuthMessage();
   }
 }
 

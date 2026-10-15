@@ -1,21 +1,15 @@
-import { isAuthorized } from './auth_utils.js';
 import { OFFLINE_MESSAGE, URL } from './constants.js';
 
 export function apiGetComments(token) {
-  return fetch(URL, {
-    headers: { Authorization: `Bearer ${token}` },
-  })
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  return fetch(URL, { headers })
     .then((response) => {
       if (!response.ok) {
         throw new Error('HTTP ' + response.status);
       }
       return response.json();
     })
-    .then((data) => {
-      const comments = Array.isArray(data.comments) ? data.comments : [];
-      const authorized = isAuthorized();
-      return { comments, authorized };
-    })
+    .then((data) => (Array.isArray(data.comments) ? data.comments : []))
     .catch((error) => {
       if (error instanceof TypeError) {
         throw new Error(OFFLINE_MESSAGE);
@@ -32,7 +26,7 @@ export function apiPostComment(token, text) {
   })
     .then((response) => {
       if (response.status === 400) {
-        throw new Error('Имя и комментарий должны быть не короче 3 символов');
+        throw new Error('Комментарий должен быть не короче 3 символов');
       }
       if (response.status === 401) {
         throw new Error('Ошибка авторизации');
@@ -53,13 +47,24 @@ export function apiPostComment(token, text) {
     });
 }
 
-export function apiOnLikeCkick(token, likeId) {
+export function apiOnLikeClick(token, likeId) {
   return fetch(URL + `/${likeId}/toggle-like`, {
     method: 'POST',
     headers: { Authorization: `Bearer ${token}` },
-  }).then((response) => {
-    if (response.status !== 200) {
-      throw new Error('HTTP ' + response.status);
-    }
-  });
+  })
+    .then((response) => {
+      if (response.status === 401) {
+        throw new Error('Ошибка авторизации');
+      }
+      if (response.status !== 200) {
+        throw new Error('HTTP ' + response.status);
+      }
+      return response.json();
+    })
+    .catch((error) => {
+      if (error instanceof TypeError) {
+        throw new Error(OFFLINE_MESSAGE);
+      }
+      throw error;
+    });
 }

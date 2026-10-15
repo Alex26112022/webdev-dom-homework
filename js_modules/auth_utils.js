@@ -1,5 +1,4 @@
 import { apiUserAuthorizationToken, apiUserRegistration } from './api_auth.js';
-import { ADMIN_MARKER } from './constants.js';
 
 export function getToken() {
   return localStorage.getItem('token');
@@ -10,33 +9,34 @@ export function getName() {
 }
 
 export function setToken(login, password) {
-  return apiUserAuthorizationToken(login, password).then(({ token, name }) => {
-    if (getToken() !== token) {
+  return apiUserAuthorizationToken(login, password)
+    .then(({ token, name }) => {
       localStorage.setItem('token', token);
       localStorage.setItem('name', name);
-    }
-
-    window.location.href = '/';
-  });
+      window.location.href = '/';
+    })
+    .catch((err) => {
+      alert(err.message);
+    });
 }
 
 export function registerUser(login, name, password) {
-  apiUserRegistration(login, name, password).then(() => {
-    window.location.href = '/authorization.html';
-  });
+  return apiUserRegistration(login, name, password)
+    .then(() => {
+      window.location.href = '/authorization.html';
+    })
+    .catch((err) => {
+      alert(err.message);
+    });
 }
 
-// TODO - костыль (апи по-хорошему должен возвращать флаг об успешной авторизации, но этого не реализовано на беке)
-export function isUnauthorizedPayload(comments) {
-  return (
-    comments.length === 1 &&
-    comments[0]?.author?.name === ADMIN_MARKER.name &&
-    comments[0]?.author?.login === ADMIN_MARKER.login &&
-    comments[0]?.isLiked === false
-  );
-}
-
-// TODO - вынужденная реализация (плохой подход)
 export function isAuthorized() {
   return Boolean(getToken());
+}
+
+export function logout() {
+  localStorage.removeItem('token');
+  localStorage.removeItem('name');
+  alert('Сессия истекла, войдите заново');
+  window.location.reload();
 }

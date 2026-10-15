@@ -8,10 +8,11 @@ export function apiUserAuthorizationToken(login, password) {
     .then((response) => {
       if (response.status === 201) {
         return response.json();
-      } else {
-        alert('Ошибка авторизации');
-        return Promise.reject(new Error('Ошибка авторизации'));
       }
+      if (response.status === 400) {
+        throw new Error('Неверный логин или пароль');
+      }
+      throw new Error('Ошибка авторизации: HTTP ' + response.status);
     })
     .then((data) => {
       const token = data.user.token;
@@ -27,12 +28,10 @@ export function apiUserRegistration(login, name, password) {
   }).then((response) => {
     if (response.status === 201) {
       return response.json();
-    } else if (response.status === 400) {
-      alert('Пользователь с таким логином уже сущетсвует');
-      return Promise.reject(new Error('Пользователь с таким логином уже сущетсвует'));
-    } else {
-      alert('Ошибка регистрации');
-      return Promise.reject(new Error('Ошибка регистрации'));
     }
+    if (response.status === 400) {
+      throw new Error('Пользователь с таким логином уже существует');
+    }
+    throw new Error('Ошибка регистрации: HTTP ' + response.status);
   });
 }
