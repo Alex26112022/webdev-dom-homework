@@ -1,25 +1,20 @@
 import * as api from './api.js';
+import { getName, getToken, isAuthorized, logout } from './auth_utils.js';
 import { MAX_RETRY } from './constants.js';
 import * as data_comments from './data.js';
 import { fetchAndRender, renderComments } from './render.js';
-
-function clearErrors() {
-  data_comments.nameInput.classList.remove('error-input');
-  data_comments.textInput.classList.remove('error-input');
-}
+import * as utils_view from './utils_view.js';
 
 function addComment(attempt = 1) {
-  const name = data_comments.nameInput.value.trim();
+  const token = getToken();
   const text = data_comments.textInput.value.trim();
 
-  if (!name) data_comments.nameInput.classList.add('error-input');
   if (!text) data_comments.textInput.classList.add('error-input');
-  if (!name || !text) return Promise.reject(new Error('validation'));
+  if (!text) return Promise.reject(new Error('validation'));
 
   return api
-    .apiPostComment(text, name)
+    .apiPostComment(token, text)
     .then(() => {
-      data_comments.nameInput.value = '';
       data_comments.textInput.value = '';
     })
     .catch((err) => {
@@ -39,53 +34,53 @@ function onCommentClick(commentEl) {
 }
 
 function onLikeClick(buttonEl) {
-  const id = Number(buttonEl.dataset.id);
+  const token = getToken();
+  const name = getName();
+  const authorized = isAuthorized();
+  const id = buttonEl.dataset.id;
   const comment = data_comments.comments.find((c) => c.id === id);
+
   if (!comment) return;
   if (comment.isLikeLoading) return;
 
   comment.isLikeLoading = true;
-  renderComments();
+  renderComments(authorized, name);
 
-  return delay(1000).then(() => {
-    comment.isLiked = !comment.isLiked;
-    comment.likes += comment.isLiked ? 1 : -1;
-    comment.isLikeLoading = false;
-    renderComments();
-  });
-}
-
-function showLoading() {
-  data_comments.addForm.classList.add('is-hidden');
-  data_comments.loadingComment.classList.remove('is-hidden');
-}
-
-function hideLoading() {
-  data_comments.addForm.classList.remove('is-hidden');
-  data_comments.loadingComment.classList.add('is-hidden');
-}
-
-function addButtonClick() {
-  showLoading();
-  clearErrors();
-
-  addComment()
-    .then(() => {
-      hideLoading();
-      return fetchAndRender(false);
+  return api
+    .apiOnLikeClick(token, id)
+    .then((data) => {
+      comment.likes = data.result.likes;
+      comment.isLiked = data.result.isLiked;
+      comment.isLikeLoading = false;
+      renderComments(authorized, name);
     })
     .catch((err) => {
-      hideLoading();
-      alert(err.message);
+      comment.isLikeLoading = false;
+      if (err.message === 'Ошибка авторизации') {
+        return logout();
+      }
+      renderComments(authorized, name);
+      console.log(err.message);
     });
 }
 
-function delay(interval = 300) {
-  return new Promise((resolve) => {
-    setTimeout(() => {
-      resolve();
-    }, interval);
-  });
+function addButtonClick() {
+  const token = getToken();
+  utils_view.showLoading();
+  utils_view.clearErrors();
+
+  addComment()
+    .then(() => {
+      utils_view.hideLoading();
+      return fetchAndRender(token, getName());
+    })
+    .catch((err) => {
+      utils_view.hideLoading();
+      if (err.message === 'Ошибка авторизации') {
+        return logout();
+      }
+      console.log(err.message);
+    });
 }
 
-export { addButtonClick, addComment, clearErrors, onCommentClick, onLikeClick };
+export { addButtonClick, addComment, onCommentClick, onLikeClick };
